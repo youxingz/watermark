@@ -9,5 +9,8 @@
         <module name="watermark" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="watermark" target="18" />
+    </bytecodeTargetLevel>
   </component>
 </project>
