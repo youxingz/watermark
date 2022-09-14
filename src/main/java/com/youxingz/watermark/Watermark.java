@@ -1,6 +1,7 @@
 package com.youxingz.watermark;
 
 import com.youxingz.watermark.builder.Config;
+import com.youxingz.watermark.exception.WatermarkException;
 
 import java.awt.image.BufferedImage;
 import java.io.*;

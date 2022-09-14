@@ -1,83 +1,95 @@
 package com.youxingz.watermark;
 
+import com.youxingz.watermark.builder.Config;
+import com.youxingz.watermark.builder.ImageWatermarkRender;
+import com.youxingz.watermark.builder.TextWatermarkBuilder;
+import com.youxingz.watermark.exception.WatermarkException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Iterator;
 import java.util.UUID;
 
-public class PdfWatermark {
-    private static final String tempDir = "/Users/neo/Desktop/uploads";
+public class PdfWatermark implements Watermark {
+    private ImageWatermarkRender imageWatermarkBuilder;
+    private TextWatermarkBuilder textWatermarkBuilder;
 
-    public static void main(String[] args) throws IOException {
-        new PdfWatermark().make(new FileInputStream(tempDir + "/deligne.pdf"), "测试文字：ABC");
-    }
 
-    public OutputStream make(InputStream file, String text) throws IOException {
-        PDDocument document = PDDocument.load(file);
+    @Override
+    public void make(InputStream src, OutputStream target, String text, Config config) throws IOException, WatermarkException {
+        assertConfigType(config, Config.Type.text);
+        if (textWatermarkBuilder == null)
+            textWatermarkBuilder = new TextWatermarkBuilder();
+        PDDocument document = PDDocument.load(src);
         Iterator<PDPage> iterator = document.getPages().iterator();
         while (iterator.hasNext()) {
             PDPage page = iterator.next();
             PDRectangle rectangle = page.getMediaBox();
             float width = rectangle.getWidth();
             float height = rectangle.getHeight();
-            PDImageXObject image = PDImageXObject.createFromByteArray(document, createFullPageWatermark((int) width, (int) height, text), "anything");
+            BufferedImage watermark = textWatermarkBuilder.render((int) width, (int) height, text, config);
+            byte[] raw = toByteArray(watermark);
+//            System.out.println(Arrays.toString(raw));
+            PDImageXObject imageObject = PDImageXObject.createFromByteArray(document, raw, "anything");
 
             PDPageContentStream contents = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.PREPEND, false);
 //            contents.setFont(PDType1Font.HELVETICA, 20);
-            contents.drawImage(image, 0, 0);
+            contents.drawImage(imageObject, 0, 0);
             contents.close();
         }
-        String filename = tempDir + "/" + tempFilename() + ".pdf";
-        FileOutputStream out = new FileOutputStream(filename);
-        document.save(out);
-        out.flush();
-        out.close();
-        return out;
+        document.save(target);
+        target.flush();
+        target.close();
     }
 
-    private byte[] createFullPageWatermark(int width, int height, String text) throws IOException {
-        BufferedImage watermark = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D graphics = watermark.createGraphics();
-        // add watermark
-        int fontSize = (height + width) / 60;
-        graphics.setColor(Color.gray);
-        graphics.setFont(new Font("宋体", Font.PLAIN, fontSize));
-        graphics.rotate(Math.toRadians(-38), width / 2, height / 2);
-        graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2F));
-        for (int i = (int) (-height * 1.5); i < height * 2; i += fontSize * 3) {
-            for (int j = 0; j < width; j += fontSize * text.length() * 1.6) {
-                graphics.drawString(text, j, i);
-            }
+    @Override
+    public void make(InputStream src, OutputStream target, BufferedImage image, Config config) throws IOException, WatermarkException {
+        assertConfigType(config, Config.Type.image);
+        if (imageWatermarkBuilder == null)
+            imageWatermarkBuilder = new ImageWatermarkRender();
+        PDDocument document = PDDocument.load(src);
+        Iterator<PDPage> iterator = document.getPages().iterator();
+        while (iterator.hasNext()) {
+            PDPage page = iterator.next();
+            PDRectangle rectangle = page.getMediaBox();
+            float width = rectangle.getWidth();
+            float height = rectangle.getHeight();
+
+            BufferedImage watermark = imageWatermarkBuilder.render((int) width, (int) height, image, config);
+            byte[] raw = toByteArray(watermark);
+            PDImageXObject imageObject = PDImageXObject.createFromByteArray(document, raw, "anything");
+
+            PDPageContentStream contents = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.PREPEND, false);
+            contents.drawImage(imageObject, 0, 0);
+            contents.close();
         }
-        graphics.dispose();
+        document.save(target);
+        target.flush();
+        target.close();
+    }
+
+    private byte[] toByteArray(BufferedImage watermark) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ImageIO.write(watermark, "png", out);
         return out.toByteArray();
     }
 
-    private byte[] createFooterWatermark(int width, int height, String text) throws IOException {
-        BufferedImage watermark = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics2D graphics = watermark.createGraphics();
-        // add watermark
-        graphics.setColor(Color.gray);
-        graphics.setFont(new Font("宋体", Font.PLAIN, (height + width) / 60));
-        graphics.drawString(text, (int) (width * .02), (int) (height * .96));
-        graphics.dispose();
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ImageIO.write(watermark, "png", out);
-        return out.toByteArray();
+    public static void main(String[] args) throws IOException, WatermarkException {
+        String tempDir = "/Users/neo/Desktop/uploads";
+        Config config = Config.buildTextConfig(true, null, -45, 3, 1.6f, 0.2f);
+        new PdfWatermark().make(new FileInputStream(tempDir + "/deligne.pdf"), new FileOutputStream(tempDir + "/" + UUID.randomUUID().toString() + ".pdf"), "测试文字：ABC", config);
     }
 
-    private String tempFilename() {
-        return UUID.randomUUID().toString();
+    public static void main2(String[] args) throws IOException, WatermarkException {
+        String tempDir = "/Users/neo/Desktop/uploads";
+        Config config = Config.buildImageConfig(true, 100, 100, null, null, 0, 3, 1.6f, 0.2f);
+        BufferedImage image = ImageIO.read(new FileInputStream(tempDir + "/test2.jpg"));
+        new PdfWatermark().make(new FileInputStream(tempDir + "/deligne.pdf"), new FileOutputStream(tempDir + "/" + UUID.randomUUID().toString() + ".pdf"), image, config);
     }
 }
