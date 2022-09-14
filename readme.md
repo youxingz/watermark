@@ -1,6 +1,8 @@
 ### Watermark in Java
 
-Easy to use, supports a variety of custom styles.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+Free and easy to use, supports a variety of custom styles.
 
 Support file format:
 
