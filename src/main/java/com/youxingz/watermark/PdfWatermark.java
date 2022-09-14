@@ -45,7 +45,7 @@ public class PdfWatermark implements Watermark {
         }
         document.save(target);
         target.flush();
-        target.close();
+//        target.close();
     }
 
     @Override
@@ -71,7 +71,7 @@ public class PdfWatermark implements Watermark {
         }
         document.save(target);
         target.flush();
-        target.close();
+//        target.close();
     }
 
     private byte[] toByteArray(BufferedImage watermark) throws IOException {
