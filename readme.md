@@ -54,6 +54,20 @@ public class Example {
 }
 ```
 
+### Maven Dependency
+
+Download [`watermark.jar`](https://github.com/youxingz/watermark/releases/download/v1.0.0/watermark-1.0.jar) and copy to `resources` directory.
+
+```xml
+<dependency>
+    <groupId>com.youxingz</groupId>
+    <artifactId>watermark</artifactId>
+    <version>1.0</version>
+    <scope>system</scope>
+    <systemPath>${project.basedir}/src/main/resources/watermark-1.0.jar</systemPath>
+</dependency>
+```
+
 ### Custom Implementation
 
 You can implement interface `Watermark` to support more files of different formats.
