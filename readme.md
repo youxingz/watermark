@@ -41,8 +41,6 @@ public class Example {
 Image watermark:
 
 ```java
-import java.awt.image.BufferedImage;
-
 public class Example {
 
     public static void main(String[] args) throws IOException, WatermarkException {
