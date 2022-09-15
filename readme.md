@@ -22,7 +22,7 @@ Support styles:
 - `theta`: rotation of watermark in degree, e.g. `-45`
 - `alpha`: transparency of watermark, the range is `0-1`
 - `mode`: support `fit-page`(repeat over the entire page), and `single`(only render once at the specified `position`)
-- `dense` and `space`: if `mode=fit-page`, it changes the density of watermarks of the page
+- `dense` and `space`: if `mode=fit-page`, it changes the density of watermarks on the page
 
 ### Examples
 
