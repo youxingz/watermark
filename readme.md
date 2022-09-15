@@ -56,16 +56,31 @@ public class Example {
 
 ### Maven Dependency
 
-Download [`watermark.jar`](https://github.com/youxingz/watermark/releases/download/v1.0.0/watermark-1.0.jar) and copy to `resources` directory.
+[//]: # (Download [`watermark.jar`]&#40;https://github.com/youxingz/watermark/releases/download/v1.0.0/watermark-1.0.jar&#41; and copy to `resources` directory.)
 
 ```xml
-<dependency>
-    <groupId>com.youxingz</groupId>
-    <artifactId>watermark</artifactId>
-    <version>1.0</version>
-    <scope>system</scope>
-    <systemPath>${project.basedir}/src/main/resources/watermark-1.0.jar</systemPath>
-</dependency>
+<dependencies>
+    <dependency>
+        <groupId>com.youxingz</groupId>
+        <artifactId>watermark</artifactId>
+        <version>1.0.1</version>
+    </dependency>
+</dependencies>
+<!-- important! add github repository -->
+<repositories>
+    <repository>
+        <id>github-repo</id>
+        <url>https://raw.githubusercontent.com/youxingz/watermark/master/mvn-repo/</url>
+        <releases>
+            <enabled>true</enabled>
+            <updatePolicy>daily</updatePolicy>
+        </releases>
+        <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+        </snapshots>
+    </repository>
+</repositories>
 ```
 
 ### Custom Implementation
