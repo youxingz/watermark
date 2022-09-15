@@ -6,7 +6,7 @@
 
     <groupId>com.youxingz</groupId>
     <artifactId>watermark</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1</version>
 
     <properties>
         <maven.compiler.source>18</maven.compiler.source>
@@ -22,4 +22,12 @@
             <version>2.0.26</version>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>internal</id>
+            <name>Github Repo</name>
+            <url>file://${project.basedir}/mvn-repo</url>
+        </repository>
+    </distributionManagement>
 </project>
