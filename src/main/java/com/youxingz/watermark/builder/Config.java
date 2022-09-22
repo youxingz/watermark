@@ -267,7 +267,13 @@ public class Config {
         if (margin == null)
 //            margin = new Config.Margin(0, 0, 0, 0);
             margin = new Config.Margin((int) (pageHeight * .02), (int) (pageWidth * .04), (int) (pageWidth * .02), (int) (pageHeight * .04));
-        if (fontStyle == null) fontStyle = new Config.FontStyle("DejaVuSans", (pageHeight + pageWidth) / 60, Color.GRAY);
+        if (fontStyle == null) fontStyle = new Config.FontStyle("SimSun", (pageHeight + pageWidth) / 60, Color.GRAY);
+        if (fontStyle.getFontName() == null)
+            fontStyle.setFontName("SimSun");
+        if (fontStyle.getFontSize() <= 0)
+            fontStyle.setFontSize((pageHeight + pageWidth) / 60);
+        if (fontStyle.getColor() == null)
+            fontStyle.setColor(Color.GRAY);
         if (position == null) position = Config.Position.bottom_right;
         if (dense <= 0) dense = 3.6f; // default
         if (space <= 0) space = 1.2f;
