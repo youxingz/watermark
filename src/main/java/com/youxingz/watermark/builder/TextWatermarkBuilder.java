@@ -16,7 +16,6 @@ public class TextWatermarkBuilder {
     public BufferedImage render(int pageWidth, int pageHeight, String text, Config config, BufferedImage background) {
         // fix config, assign invalid value!
         config.fixConfig(pageWidth, pageHeight);
-        System.out.println(config);
         float theta = config.getTheta();
         float alpha = config.getAlpha();
         Config.Margin margin = config.getMargin();
