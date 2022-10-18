@@ -6,7 +6,7 @@
 
     <groupId>com.youxingz</groupId>
     <artifactId>watermark</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 
     <properties>
         <maven.compiler.source>18</maven.compiler.source>
@@ -23,11 +23,19 @@
         </dependency>
     </dependencies>
 
+<!--    <distributionManagement>-->
+<!--        <repository>-->
+<!--            <id>internal</id>-->
+<!--            <name>Github Repo</name>-->
+<!--            <url>file://${project.basedir}/mvn-repo</url>-->
+<!--        </repository>-->
+<!--    </distributionManagement>-->
+
     <distributionManagement>
         <repository>
-            <id>internal</id>
-            <name>Github Repo</name>
-            <url>file://${project.basedir}/mvn-repo</url>
+            <id>github</id>
+            <name>GitHub OWNER Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/youxingz/watermark</url>
         </repository>
     </distributionManagement>
 </project>
