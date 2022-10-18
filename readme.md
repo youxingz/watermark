@@ -63,24 +63,9 @@ public class Example {
     <dependency>
         <groupId>com.youxingz</groupId>
         <artifactId>watermark</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
     </dependency>
 </dependencies>
-<!-- important! add github repository -->
-<repositories>
-    <repository>
-        <id>github-repo</id>
-        <url>https://raw.githubusercontent.com/youxingz/watermark/master/mvn-repo/</url>
-        <releases>
-            <enabled>true</enabled>
-            <updatePolicy>daily</updatePolicy>
-        </releases>
-        <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>always</updatePolicy>
-        </snapshots>
-    </repository>
-</repositories>
 ```
 
 ### Custom Implementation
